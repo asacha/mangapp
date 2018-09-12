@@ -34,9 +34,12 @@ class RVMangaAdapter(var context: Context, private var mangaList: MutableList<Ma
         holder.tvChapter.text = manga.latestChapter
     }
 
-    fun updateMangaList(mangaList: List<Manga>) {
+    fun updateMangaList(mangaList: List<Manga>?) {
+        Log.d(TAG, "updateMangaList: " + this.mangaList.size)
         this.mangaList.clear()
-        this.mangaList.addAll(mangaList)
+        if (mangaList != null) {
+            this.mangaList.addAll(mangaList)
+        }
         notifyDataSetChanged()
     }
 

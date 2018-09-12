@@ -20,14 +20,14 @@ class RemoteDataSource {
                 .build()
     }
 
-    private fun getLatestFromNetwork(): Call<ResponseBody> {
+    private fun getLatestFromNetwork(page: Int): Call<ResponseBody> {
         Log.d(TAG, "getLatestFromNetwork: ")
-        return createInstance().create(RemoteService::class.java).getLatest()
+        return createInstance().create(RemoteService::class.java).getLatestPage(page)
     }
 
-    fun getLatest(callback: LatestCallback) {
+    fun getLatest(page: Int, callback: LatestCallback) {
         Log.d(TAG, "getLatest: ")
-        getLatestFromNetwork().enqueue(object : Callback<ResponseBody> {
+        getLatestFromNetwork(page).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
                 Log.d(TAG, "onResponse: ")
                 val latestResult: ByteArray = response!!.body()!!.source().readByteArray()

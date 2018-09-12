@@ -1,7 +1,9 @@
 package com.freelance.ascstb.mangapp.view.main
 
+import android.annotation.TargetApi
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -18,6 +20,8 @@ import com.freelance.ascstb.mangapp.model.entity.Manga
 import com.freelance.ascstb.mangapp.viewmodel.LatestViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.content_main.*
+import java.util.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private var viewModel: LatestViewModel? = null
@@ -26,9 +30,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
 
         Log.d(TAG, "onCreate: ")
+
+        //region Navigation Drawer Support
+        setSupportActionBar(toolbar)
 
 //        fab.setOnClickListener { view ->
 //            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -41,15 +47,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+        //endregion
 
-        initViews()
-        viewModel = ViewModelProviders.of(this).get(LatestViewModel::class.java)
-        viewModel!!.mangaList.observe(this, Observer { mangas ->
-            Log.d(TAG, "onCreate: " + mangas!!.size)
-            adapter!!.updateMangaList(mangaList = mangas)
-        })
+        initRecyclerView()
+        this.viewModel = ViewModelProviders.of(this).get(LatestViewModel::class.java)
+        updateMangaList()
+        setOnScrollEndListener()
     }
 
+    //region Navigation Drawer
     override fun onBackPressed() {
         Log.d(TAG, "onBackPressed: ")
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
@@ -104,13 +110,33 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
+    //endregion
 
-    private fun initViews() {
+    private fun initRecyclerView() {
+        Log.d(TAG, "initRecyclerView: ")
         val rvMangaList = findViewById<RecyclerView>(R.id.rvMangas)
         val layoutManager = GridLayoutManager(applicationContext, 3)
         this.adapter = RVMangaAdapter(applicationContext, ArrayList<Manga>())
         rvMangaList.layoutManager = layoutManager
         rvMangaList.adapter = adapter
+    }
+
+    private fun updateMangaList() {
+        Log.d(TAG, "updateMangaList: ")
+        viewModel!!.updatePage()
+        viewModel!!.mangaList.observe(this, Observer { mangaList ->
+            adapter!!.updateMangaList(mangaList)
+        })
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private fun setOnScrollEndListener() {
+        rvMangas.setOnScrollChangeListener { view, i, i1, i2, i3 ->
+            if (!(view as RecyclerView).canScrollVertically(1)) {
+                Log.d(TAG, "setOnScrollEndListener: ")
+                updateMangaList()
+            }
+        }
     }
 
     companion object {

@@ -11,14 +11,15 @@ import com.freelance.ascstb.mangapp.model.entity.Manga
 class MangaRepository(private var remoteDataSource: RemoteDataSource, private var localDataSource: LocalDataSource) {
     var data = MutableLiveData<List<Manga>>()
 
-    fun getLatest(): LiveData<List<Manga>> {
-        remoteDataSource.getLatest(object : LatestCallback {
+    fun getLatest(page: Int): LiveData<List<Manga>> {
+        remoteDataSource.getLatest(page, object : LatestCallback {
             override fun onLatestResponse(result: List<Manga>) {
+                Log.d(TAG, "onLatestResponse: page: $page. resultSize: ${result.size}")
                 data.value = result
             }
 
             override fun onRemoteFaliure(error: String) {
-                Log.d(TAG, "onRemoteFaliure: ${error}")
+                Log.d(TAG, "onRemoteFailure: $error")
             }
         })
 
