@@ -1,11 +1,20 @@
-package com.freelance.ascstb.mangapp.utils
+package com.freelance.ascstb.mangapp.model.data.converter
 
 import android.util.Log
 import com.freelance.ascstb.mangapp.model.entity.Manga
+import okhttp3.ResponseBody
+import org.json.JSONObject
 import org.jsoup.Jsoup
+import retrofit2.Converter
 import java.nio.charset.Charset
 
-class MyConverter {
+class MyConverter : Converter<ResponseBody, List<Manga>> {
+    override fun convert(responseBody: ResponseBody): List<Manga> {
+        return fromLatestResult(fromResponseBody(responseBody))
+    }
+    //Create a new Gson Converter
+    //Extend converter factory class as singleton
+
     fun fromLatestResult(latestResult: ByteArray): List<Manga> {
         Log.d(TAG, "fromLatestResult: ")
         val result = ArrayList<Manga>()
@@ -30,12 +39,17 @@ class MyConverter {
             manga.latestChapterUrl = serie.getElementsByClass("read-btn")[0].attr("href")
             manga.latestChapter = serie.getElementsByClass("read-btn")[0].text()
 
-            if (manga.coverUrl.trim{it <= ' '} != "") {
+            if (manga.coverUrl.trim { it <= ' ' } != "") {
                 result.add(manga)
             }
         }
 
         return result
+    }
+
+    fun fromResponseBody(responseBody: ResponseBody): ByteArray {
+//        return response!!.body()!!.source().readByteArray()
+        return responseBody.source().readByteArray()
     }
 
     companion object {

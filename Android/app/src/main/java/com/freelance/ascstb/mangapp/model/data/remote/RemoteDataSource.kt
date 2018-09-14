@@ -1,21 +1,23 @@
 package com.freelance.ascstb.mangapp.model.data.remote
 
 import android.util.Log
-import com.freelance.ascstb.mangapp.utils.MyConverter
+import com.freelance.ascstb.mangapp.model.data.converter.MyConverterFactory
+import com.freelance.ascstb.mangapp.model.data.converter.MyConverter
+import com.freelance.ascstb.mangapp.model.entity.Manga
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 
 class RemoteDataSource {
     private fun createInstance(): Retrofit {
         Log.d(TAG, "createInstance: ")
         return Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
+                //.addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(MyConverterFactory())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
     }
@@ -23,6 +25,11 @@ class RemoteDataSource {
     private fun getLatestFromNetwork(page: Int): Call<ResponseBody> {
         Log.d(TAG, "getLatestFromNetwork: ")
         return createInstance().create(RemoteService::class.java).getLatestPage(page)
+    }
+
+    private fun getLatestConvertedFromNetwork(page: Int): List<Manga> {
+        Log.d(TAG, "getLatestFromNetwork: ")
+        return createInstance().create(RemoteService::class.java).getLatestPageConverted(page)
     }
 
     fun getLatest(page: Int, callback: LatestCallback) {
@@ -41,6 +48,11 @@ class RemoteDataSource {
                 callback.onRemoteFaliure(t.message.toString())
             }
         })
+    }
+
+    fun getLatestConverted(page: Int, callback: LatestCallback) {
+        Log.d(TAG, "getLatestConverted")
+
     }
 
     companion object {

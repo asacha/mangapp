@@ -22,6 +22,7 @@ class LatestViewModel(application: Application) : AndroidViewModel(application) 
     private fun loadMangaList() {
         Log.d(TAG, "loadMangaList: ")
         mangaRepository.getLatest(page)
+
     }
 
     fun updatePage() {

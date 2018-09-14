@@ -24,8 +24,8 @@ import kotlinx.android.synthetic.main.content_main.*
 import java.util.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
-    private var viewModel: LatestViewModel? = null
-    private var adapter: RVMangaAdapter? = null
+    private lateinit var viewModel: LatestViewModel
+    private lateinit var adapter: RVMangaAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +51,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         initRecyclerView()
         this.viewModel = ViewModelProviders.of(this).get(LatestViewModel::class.java)
+        viewModel.mangaList.observe(this, Observer { mangaList ->
+            Log.d(TAG, "mangaList.observe ${mangaList!!.size}")
+            adapter.updateMangaList(mangaList)
+        })
         updateMangaList()
         setOnScrollEndListener()
     }
@@ -123,10 +127,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun updateMangaList() {
         Log.d(TAG, "updateMangaList: ")
-        viewModel!!.updatePage()
-        viewModel!!.mangaList.observe(this, Observer { mangaList ->
-            adapter!!.updateMangaList(mangaList)
-        })
+        viewModel.updatePage()
+
     }
 
     @TargetApi(Build.VERSION_CODES.M)
