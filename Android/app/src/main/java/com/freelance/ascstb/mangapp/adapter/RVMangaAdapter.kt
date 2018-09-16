@@ -1,7 +1,6 @@
 package com.freelance.ascstb.mangapp.adapter
 
 import android.content.Context
-import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,14 +8,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.freelance.ascstb.mangapp.R
 import com.freelance.ascstb.mangapp.model.entity.Manga
 
-class RVMangaAdapter(var context: Context, private var mangaList: MutableList<Manga>) : RecyclerView.Adapter<RVMangaAdapter.ViewHolder>() {
+class RVMangaAdapter(private var mangaList: MutableList<Manga>, private val listener: (Manga) -> Unit) : RecyclerView.Adapter<RVMangaAdapter.ViewHolder>() {
+    lateinit var context: Context
+
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): ViewHolder {
-        this.context = parent.context
+        context = parent.context
         val view: View = LayoutInflater.from(parent.context).inflate(R.layout.manga_list_item, parent, false)
         return ViewHolder(view)
     }
@@ -32,6 +32,8 @@ class RVMangaAdapter(var context: Context, private var mangaList: MutableList<Ma
 
         holder.tvTitle.text = manga.title
         holder.tvChapter.text = manga.latestChapter
+
+        holder.bind(manga, listener)
     }
 
     fun updateMangaList(pMangaList: List<Manga>) {
@@ -43,18 +45,15 @@ class RVMangaAdapter(var context: Context, private var mangaList: MutableList<Ma
         notifyDataSetChanged()
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val ivCover: ImageView = itemView.findViewById(R.id.ivCover)
         val tvTitle: TextView = itemView.findViewById(R.id.tvTitle)
         val tvChapter: TextView = itemView.findViewById(R.id.tvChapter)
 
-        init {
-            itemView.setOnClickListener(this)
-        }
-
-        override fun onClick(view: View) {
-            Log.d(TAG, "onClick: ")
-            Toast.makeText(context, "", Toast.LENGTH_SHORT)
+        fun bind(manga: Manga, clickListener: (Manga) -> Unit) {
+            itemView.setOnClickListener {
+                clickListener(manga)
+            }
         }
     }
 

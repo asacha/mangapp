@@ -1,8 +1,9 @@
-package com.freelance.ascstb.mangapp.view.main
+package com.freelance.ascstb.mangapp.view
 
 import android.annotation.TargetApi
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -21,7 +22,7 @@ import com.freelance.ascstb.mangapp.viewmodel.LatestViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var viewModel: LatestViewModel
@@ -120,7 +121,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         Log.d(TAG, "initRecyclerView: ")
         val rvMangaList = findViewById<RecyclerView>(R.id.rvMangas)
         val layoutManager = GridLayoutManager(applicationContext, 3)
-        this.adapter = RVMangaAdapter(applicationContext, ArrayList<Manga>())
+        //this.adapter = RVMangaAdapter(applicationContext, ArrayList<Manga>())
+        this.adapter = RVMangaAdapter(ArrayList<Manga>()) { manga: Manga -> mangaClicked(manga) }
         rvMangaList.layoutManager = layoutManager
         rvMangaList.adapter = adapter
     }
@@ -128,7 +130,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun updateMangaList() {
         Log.d(TAG, "updateMangaList: ")
         viewModel.updatePage()
-
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -139,6 +140,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 updateMangaList()
             }
         }
+    }
+
+    private fun mangaClicked(manga: Manga) {
+        Log.d(TAG, "mangaClicked: ${manga.title}")
+        intent = Intent(applicationContext, DetailActivity::class.java)
+        intent.putExtra("TitleUrl", manga.titleUrl)
+        intent.putExtra("coverUrl", manga.coverUrl)
+        startActivity(intent)
     }
 
     companion object {

@@ -1,9 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.detail.detail">
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp"
+    tools:context=".view.DetailActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:id="@+id/tvDetailTitle"
+        style="@style/Manga.Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp">
+
+        <ImageView
+            android:id="@+id/ivDetailCover"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/cover" />
+
+        <TextView
+            android:id="@+id/tvDetailAuthorsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/ivDetailCover"
+            android:text="@string/author_s" />
+
+        <TextView
+            android:id="@+id/tvDetailAuthors"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/tvDetailAuthorsLabel"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/tvDetailArtistsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvDetailAuthors"
+            android:layout_toEndOf="@id/ivDetailCover"
+            android:text="@string/artist_s" />
+
+        <TextView
+            android:id="@+id/tvDetailArtists"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvDetailAuthors"
+            android:layout_toEndOf="@id/tvDetailArtistsLabel"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/tvDetailStatusLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvDetailArtists"
+            android:layout_toEndOf="@id/ivDetailCover"
+            android:text="@string/status" />
+
+        <TextView
+            android:id="@+id/tvDetailStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvDetailArtists"
+            android:layout_toEndOf="@id/tvDetailStatusLabel"
+            android:text="" />
+
+        <Button
+            android:id="@+id/btnStartReading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvDetailStatus"
+            android:layout_toEndOf="@id/ivDetailCover"
+            android:onClick="onStartReading"
+            android:text="@string/start_reading" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvDetailAlternativeNameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/alternative_name" />
+
+        <TextView
+            android:id="@+id/tvDetailAlternativeName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/tvDetailAlternativeNameLabel"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/tvDetailGenreLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvDetailAlternativeNameLabel"
+            android:text="@string/genre_s" />
+
+        <TextView
+            android:id="@+id/tvDetailGenre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvDetailAlternativeName"
+            android:layout_toEndOf="@id/tvDetailGenreLabel"
+            android:text="" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/summary" />
+
+    <TextView
+        android:id="@+id/tvDetailSummary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvChapters"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </android.support.v7.widget.RecyclerView>
+</LinearLayout>
